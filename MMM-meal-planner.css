@@ -1,0 +1,45 @@
+.region.right .MMM-meal-planner,
+.region.top.right .MMM-meal-planner,
+.region.bottom.right .MMM-meal-planner {
+    float: right;
+}
+
+.MMM-meal-planner .meal-day {
+    margin-bottom: 0.4em;
+    line-height: 1.2;
+}
+
+.MMM-meal-planner .meal-day .meal-date {
+    display: block;
+    font-weight: bold;
+}
+
+.MMM-meal-planner .meal-day.today .meal-date::after {
+    content: " · today";
+    font-weight: normal;
+    opacity: 0.7;
+}
+
+.MMM-meal-planner .meal-day .meal-list {
+    display: block;
+}
+
+.MMM-meal-planner .meal-day .meal {
+    display: block;
+}
+
+.MMM-meal-planner .meal-day .meal .meal-name {
+    font-weight: normal;
+}
+
+.MMM-meal-planner .meal-day .meal .meal-description {
+    display: block;
+    font-size: 0.85em;
+    opacity: 0.7;
+}
+
+.MMM-meal-planner .meal-day.empty .meal-empty,
+.MMM-meal-planner .meal-day .meal.placeholder .meal-name {
+    opacity: 0.6;
+    font-style: italic;
+}
