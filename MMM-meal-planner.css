@@ -43,3 +43,113 @@
     opacity: 0.6;
     font-style: italic;
 }
+
+/* =========================================================
+   Week layout
+   ========================================================= */
+
+.MMM-meal-planner.layout-week {
+    width: 100%;
+}
+
+.MMM-meal-planner .meal-week-grid {
+    display: grid;
+    /* grid-template-columns injected inline as repeat(N, 1fr) */
+    gap: 0.6em;
+    width: 100%;
+}
+
+.MMM-meal-planner .meal-week-cell {
+    display: flex;
+    flex-direction: column;
+    min-width: 0; /* prevent grid blowout */
+}
+
+.MMM-meal-planner .meal-week-cell .meal-date {
+    font-size: 0.78em;
+    font-weight: bold;
+    text-align: center;
+    padding: 0.2em 0 0.3em;
+    opacity: 0.8;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.MMM-meal-planner .meal-week-cell.today .meal-date {
+    opacity: 1;
+    color: #fff;
+    border-bottom: 2px solid rgba(255, 255, 255, 0.55);
+    padding-bottom: 0.25em;
+    margin-bottom: 0.25em;
+}
+
+.MMM-meal-planner .meal-week-item {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    margin-bottom: 0.3em;
+}
+
+/* Image container — fixed 4:3 aspect, cover-fit */
+.MMM-meal-planner .meal-image-wrap {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 4 / 3;
+    overflow: hidden;
+    border-radius: 4px;
+    background: rgba(255, 255, 255, 0.07);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 0.3em;
+}
+
+/* Null-image / placeholder fallback */
+.MMM-meal-planner .meal-image-wrap.no-image {
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.09);
+}
+
+.MMM-meal-planner .meal-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    border-radius: 4px;
+}
+
+.MMM-meal-planner .meal-placeholder-icon {
+    font-size: 1.8em;
+    opacity: 0.35;
+    user-select: none;
+}
+
+.MMM-meal-planner .meal-week-cell .meal-name {
+    font-size: 0.82em;
+    text-align: center;
+    line-height: 1.2;
+    word-break: break-word;
+}
+
+/* Dimmed/italic for placeholders and empty days */
+.MMM-meal-planner .meal-week-item.placeholder .meal-name,
+.MMM-meal-planner .meal-week-cell.empty .meal-name,
+.MMM-meal-planner .meal-name.meal-empty {
+    opacity: 0.5;
+    font-style: italic;
+}
+
+/* Description — clamp to 2 lines so it fits a mirror */
+.MMM-meal-planner .meal-week-cell .meal-description {
+    font-size: 0.75em;
+    opacity: 0.65;
+    text-align: center;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    margin-top: 0.15em;
+    line-height: 1.3;
+}
+

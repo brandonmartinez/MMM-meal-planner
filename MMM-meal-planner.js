@@ -10,6 +10,7 @@ Module.register("MMM-meal-planner", {
     showDescription: false,
     showHeaderForToday: true,
     initialLoadDelay: 1000,
+    layout: "week",
   },
 
   getStyles() {
@@ -89,6 +90,16 @@ Module.register("MMM-meal-planner", {
       return wrapper
     }
 
+    if (this.config.layout === "week") {
+      this.renderWeek(wrapper)
+    } else {
+      this.renderList(wrapper)
+    }
+
+    return wrapper
+  },
+
+  renderList(wrapper) {
     const todayKey = this.toDateKey(new Date())
 
     this.meals.forEach((day) => {
@@ -147,8 +158,117 @@ Module.register("MMM-meal-planner", {
       row.appendChild(mealsEl)
       wrapper.appendChild(row)
     })
+  },
 
-    return wrapper
+  renderWeek(wrapper) {
+    wrapper.classList.add("layout-week")
+    const todayKey = this.toDateKey(new Date())
+
+    const daysToRender = this.meals.filter((day) => {
+      const hasMeals = Array.isArray(day.meals) && day.meals.length > 0
+      return hasMeals || this.config.showEmptyDays
+    })
+
+    const grid = document.createElement("div")
+    grid.className = "meal-week-grid"
+    if (daysToRender.length > 0) {
+      grid.style.gridTemplateColumns = "repeat(" + daysToRender.length + ", 1fr)"
+    }
+
+    daysToRender.forEach((day) => {
+      const hasMeals = Array.isArray(day.meals) && day.meals.length > 0
+
+      const cell = document.createElement("div")
+      cell.className = "meal-week-cell"
+      if (day.date === todayKey) {
+        cell.classList.add("today")
+      }
+      if (!hasMeals) {
+        cell.classList.add("empty")
+      }
+
+      // Day label
+      const dateEl = document.createElement("div")
+      dateEl.className = "meal-date"
+      dateEl.textContent = this.formatDate(day.date, day.dayOfWeek)
+      cell.appendChild(dateEl)
+
+      if (!hasMeals) {
+        // Empty-day placeholder item
+        const item = document.createElement("div")
+        item.className = "meal-week-item"
+
+        const imageWrap = document.createElement("div")
+        imageWrap.className = "meal-image-wrap no-image"
+        const iconEl = document.createElement("span")
+        iconEl.className = "meal-placeholder-icon"
+        iconEl.textContent = "—"
+        imageWrap.appendChild(iconEl)
+        item.appendChild(imageWrap)
+
+        const nameEl = document.createElement("div")
+        nameEl.className = "meal-name meal-empty"
+        nameEl.textContent = this.config.emptyDayText
+        item.appendChild(nameEl)
+
+        cell.appendChild(item)
+      } else {
+        day.meals.forEach((meal) => {
+          const item = document.createElement("div")
+          item.className = "meal-week-item"
+          if (meal.placeholderKind) {
+            item.classList.add("placeholder")
+            item.classList.add("placeholder-" + String(meal.placeholderKind).toLowerCase().replace(/_/g, "-"))
+          }
+
+          // Image or placeholder treatment
+          const imageWrap = document.createElement("div")
+          imageWrap.className = "meal-image-wrap"
+
+          const hasImage = !meal.placeholderKind
+            && typeof meal.imageUrl === "string"
+            && meal.imageUrl.length > 0
+
+          if (hasImage) {
+            const img = document.createElement("img")
+            img.className = "meal-image"
+            img.src = meal.imageUrl // DOM property — safe, no innerHTML interpolation
+            img.alt = meal.name || ""
+            img.loading = "lazy"
+            imageWrap.appendChild(img)
+          } else {
+            // No real image: show icon centred on dimmed background
+            imageWrap.classList.add("no-image")
+            const iconEl = document.createElement("span")
+            iconEl.className = "meal-placeholder-icon"
+            iconEl.textContent = (typeof meal.icon === "string" && meal.icon) ? meal.icon : "🍽"
+            imageWrap.appendChild(iconEl)
+          }
+
+          item.appendChild(imageWrap)
+
+          // Meal name
+          const nameEl = document.createElement("div")
+          nameEl.className = "meal-name"
+          nameEl.textContent = meal.name || ""
+          item.appendChild(nameEl)
+
+          // Optional description
+          if (this.config.showDescription && meal.description) {
+            const descEl = document.createElement("div")
+            descEl.className = "meal-description"
+            descEl.textContent = meal.description
+            item.appendChild(descEl)
+          }
+
+          cell.appendChild(item)
+        })
+      }
+
+      grid.appendChild(cell)
+    })
+
+    wrapper.appendChild(grid)
   },
 
   formatDate(dateStr, fallbackDayOfWeek) {

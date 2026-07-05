@@ -5,9 +5,10 @@ A [MagicMirror²][mm] module that displays a rolling list of upcoming meals from
 
 ## Screenshot
 
-The module renders one row per day, starting from today, showing the planned meal(s)
-for each day. Today's row is decorated and "placeholder" meals (e.g., free days,
-dining out) are visually distinct.
+The module supports two layouts:
+
+- **`week` (default)** — a full-width horizontal strip of day-cells (one per day in the rolling `days` window) showing each meal's image, day label, name, and optional description. Ideal for a bottom or full-width MagicMirror region.
+- **`list`** — the original compact vertical list, one row per day. Ideal for a right-side region.
 
 ## Installation
 
@@ -37,15 +38,18 @@ Add the module to the `modules` array in your `config/config.js`:
 ```js
 {
     module: "MMM-meal-planner",
-    position: "top_right",
+    position: "bottom_bar",
     header: "This Week's Meals",
     config: {
         apiBaseUrl: "https://meals.themartinez.cloud",
         apiKey: "YOUR_API_KEY",
-        days: 7
+        days: 7,
+        layout: "week"   // full-width image strip (default)
     }
 }
 ```
+
+For the original compact list, use `position: "top_right"` and set `layout: "list"`.
 
 You can point `apiBaseUrl` at any meal-planner instance you control; the module is not
 locked to a specific deployment.
@@ -64,21 +68,34 @@ create one. The key is sent on every request as the `X-API-Key` header.
 | `apiKey`            | `string`  | `""` (**required**)                  | API key for the family whose meals should be displayed.                     |
 | `days`              | `number`  | `7`                                  | Number of rolling days to show, starting today.                             |
 | `updateFrequency`   | `number`  | `300`                                | How often to refetch meals, in seconds. Minimum effective value is 30.      |
+| `layout`            | `string`  | `"week"`                             | Display layout. `"week"` renders a full-width horizontal image strip; `"list"` renders the compact vertical list. |
 | `showEmptyDays`     | `boolean` | `true`                               | If `true`, render days with no planned meal using `emptyDayText`.           |
 | `emptyDayText`      | `string`  | `"—"`                                | Text shown for empty days when `showEmptyDays` is `true`.                   |
 | `dateFormat`        | `string`  | `"ddd, MMM D"`                       | Moment.js format string for the date label.                                 |
-| `showDescription`   | `boolean` | `false`                              | If `true`, show each meal's description below its name.                     |
+| `showDescription`   | `boolean` | `false`                              | If `true`, show each meal's description below its name (week layout clamps to 2 lines). |
 | `initialLoadDelay`  | `number`  | `1000`                               | Delay (ms) before the first fetch after MagicMirror boots.                  |
 
 ## Styling
 
 The module is fully namespaced under `.MMM-meal-planner`. Useful selectors:
 
+**List layout (`layout: "list"`):**
 - `.MMM-meal-planner .meal-day` — one row per day
 - `.MMM-meal-planner .meal-day.today` — the row for today
 - `.MMM-meal-planner .meal-day.empty` — a row with no planned meal
 - `.MMM-meal-planner .meal .placeholder` — a placeholder meal (e.g., FREE_DAY)
 - `.MMM-meal-planner .meal-name` / `.meal-description` — meal text
+
+**Week layout (`layout: "week"`):**
+- `.MMM-meal-planner .meal-week-grid` — the CSS grid container
+- `.MMM-meal-planner .meal-week-cell` — one column per day
+- `.MMM-meal-planner .meal-week-cell.today` — today's column
+- `.MMM-meal-planner .meal-week-cell.empty` — a column with no planned meal
+- `.MMM-meal-planner .meal-week-item` — individual meal within a cell
+- `.MMM-meal-planner .meal-week-item.placeholder` — placeholder meal
+- `.MMM-meal-planner .meal-image-wrap` — image container (4:3 aspect)
+- `.MMM-meal-planner .meal-image-wrap.no-image` — fallback when no image
+- `.MMM-meal-planner .meal-placeholder-icon` — icon shown in no-image state
 
 Override these in your MagicMirror `custom.css` to tailor the look.
 
