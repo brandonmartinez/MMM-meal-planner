@@ -11,6 +11,7 @@ Module.register("MMM-meal-planner", {
     showHeaderForToday: true,
     initialLoadDelay: 1000,
     layout: "week",
+    thumbnailHeight: "6rem",
   },
 
   getStyles() {
@@ -71,6 +72,7 @@ Module.register("MMM-meal-planner", {
   getDom() {
     const wrapper = document.createElement("div")
     wrapper.className = "MMM-meal-planner"
+    wrapper.style.setProperty("--mmp-thumb-height", this.config.thumbnailHeight)
 
     if (!this.loaded && !this.error) {
       wrapper.innerHTML = "Loading meals…"
