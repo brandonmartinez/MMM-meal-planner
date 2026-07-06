@@ -66,13 +66,14 @@ create one. The key is sent on every request as the `X-API-Key` header.
 | ------------------- | --------- | ------------------------------------ | --------------------------------------------------------------------------- |
 | `apiBaseUrl`        | `string`  | `https://meals.themartinez.cloud`    | Base URL of the meal-planner instance (no trailing slash required).         |
 | `apiKey`            | `string`  | `""` (**required**)                  | API key for the family whose meals should be displayed.                     |
-| `days`              | `number`  | `7`                                  | Number of rolling days to show, starting today.                             |
+| `days`              | `number`  | `7`                                  | Number of days to display, anchored to today (today + the next `days − 1` days). For example, `days: 3` shows today and the next 2 days. |
 | `updateFrequency`   | `number`  | `300`                                | How often to refetch meals, in seconds. Minimum effective value is 30.      |
 | `layout`            | `string`  | `"week"`                             | Display layout. `"week"` renders a full-width horizontal image strip; `"list"` renders the compact vertical list. |
 | `showEmptyDays`     | `boolean` | `true`                               | If `true`, render days with no planned meal using `emptyDayText`.           |
 | `emptyDayText`      | `string`  | `"—"`                                | Text shown for empty days when `showEmptyDays` is `true`.                   |
 | `dateFormat`        | `string`  | `"ddd, MMM D"`                       | Moment.js format string for the date label.                                 |
 | `showDescription`   | `boolean` | `false`                              | If `true`, show each meal's description below its name (week layout clamps to 2 lines). |
+| `thumbnailHeight`   | `string`  | `"6rem"`                             | Height of the meal image container (any CSS length, e.g. `"8rem"`, `"120px"`). Increase for larger thumbnails. Images always fill the area with `object-fit: cover`. |
 | `initialLoadDelay`  | `number`  | `1000`                               | Delay (ms) before the first fetch after MagicMirror boots.                  |
 
 ## Styling
@@ -93,7 +94,7 @@ The module is fully namespaced under `.MMM-meal-planner`. Useful selectors:
 - `.MMM-meal-planner .meal-week-cell.empty` — a column with no planned meal
 - `.MMM-meal-planner .meal-week-item` — individual meal within a cell
 - `.MMM-meal-planner .meal-week-item.placeholder` — placeholder meal
-- `.MMM-meal-planner .meal-image-wrap` — image container (4:3 aspect)
+- `.MMM-meal-planner .meal-image-wrap` — image container (height driven by `thumbnailHeight`)
 - `.MMM-meal-planner .meal-image-wrap.no-image` — fallback when no image
 - `.MMM-meal-planner .meal-placeholder-icon` — icon shown in no-image state
 

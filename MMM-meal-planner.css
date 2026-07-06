@@ -91,11 +91,11 @@
     margin-bottom: 0.3em;
 }
 
-/* Image container — fixed 4:3 aspect, cover-fit */
+/* Image container — configurable height via --mmp-thumb-height, cover-fit */
 .MMM-meal-planner .meal-image-wrap {
     position: relative;
     width: 100%;
-    aspect-ratio: 4 / 3;
+    height: var(--mmp-thumb-height, 6rem);
     overflow: hidden;
     border-radius: 4px;
     background: rgba(255, 255, 255, 0.07);
